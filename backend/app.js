@@ -25,8 +25,8 @@ const allowedOrigins =
 app.use(
     cors({
         origin: (origin, callback) => {
-            // Allow Postman / curl (no origin) + whitelisted origins
-            if (!origin || allowedOrigins.includes(origin)) {
+            // Allow Postman / curl (no origin) + whitelisted origins + Netlify preview deployments
+            if (!origin || allowedOrigins.includes(origin) || origin.endsWith('jade-wisp-ce2f09.netlify.app')) {
                 callback(null, true);
             } else {
                 callback(new Error(`CORS blocked for origin: ${origin}`));
