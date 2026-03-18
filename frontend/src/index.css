@@ -1,0 +1,142 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 99%;
+    --foreground: 220 20% 10%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 220 20% 10%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 20% 10%;
+
+    --primary: 220 70% 50%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 220 14% 96%;
+    --secondary-foreground: 220 20% 10%;
+
+    --muted: 220 14% 96%;
+    --muted-foreground: 220 10% 46%;
+
+    --accent: 220 14% 93%;
+    --accent-foreground: 220 20% 10%;
+
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+
+    --success: 152 60% 40%;
+    --success-foreground: 0 0% 100%;
+
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 100%;
+
+    --danger: 0 72% 51%;
+    --danger-foreground: 0 0% 100%;
+
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 220 70% 50%;
+
+    --radius: 0.75rem;
+
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+
+    /* Urgency section backgrounds */
+    --urgency-critical: 0 100% 97%;
+    --urgency-critical-border: 0 72% 85%;
+    --urgency-warning: 38 100% 96%;
+    --urgency-warning-border: 38 80% 80%;
+    --urgency-caution: 45 100% 96%;
+    --urgency-caution-border: 45 80% 80%;
+    --urgency-safe: 152 60% 96%;
+    --urgency-safe-border: 152 40% 82%;
+
+    /* Shadows */
+    --shadow-sm: 0 1px 2px 0 hsl(220 20% 10% / 0.03);
+    --shadow-md: 0 4px 6px -1px hsl(220 20% 10% / 0.04), 0 2px 4px -2px hsl(220 20% 10% / 0.04);
+    --shadow-lg: 0 10px 15px -3px hsl(220 20% 10% / 0.05), 0 4px 6px -4px hsl(220 20% 10% / 0.05);
+    --shadow-xl: 0 20px 25px -5px hsl(220 20% 10% / 0.06), 0 8px 10px -6px hsl(220 20% 10% / 0.06);
+  }
+
+  .dark {
+    --background: 220 20% 6%;
+    --foreground: 210 40% 98%;
+    --card: 220 20% 8%;
+    --card-foreground: 210 40% 98%;
+    --popover: 220 20% 8%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 220 70% 55%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 220 14% 14%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 220 14% 14%;
+    --muted-foreground: 215 20% 65%;
+    --accent: 220 14% 16%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 220 14% 16%;
+    --input: 220 14% 16%;
+    --ring: 220 70% 55%;
+    --sidebar-background: 220 20% 6%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 220 14% 14%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 220 14% 16%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply tracking-tight;
+  }
+}
+
+@layer utilities {
+  .glass-card {
+    @apply bg-card border border-border rounded-xl;
+    box-shadow: var(--shadow-md);
+  }
+
+  .glass-card-elevated {
+    @apply bg-card border border-border rounded-xl;
+    box-shadow: var(--shadow-lg);
+  }
+
+  .hover-lift {
+    @apply transition-all duration-200 ease-out;
+  }
+
+  .hover-lift:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-xl);
+  }
+
+  .gradient-text {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/70;
+  }
+}
