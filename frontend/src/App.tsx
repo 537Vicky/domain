@@ -11,7 +11,6 @@ import Dashboard from "./pages/Dashboard";
 import Licenses from "./pages/Licenses";
 import Domains from "./pages/Domains";
 import Subscriptions from "./pages/Subscriptions";
-import VerifyOtp from "./pages/VerifyOtp";
 import UserManagement from "./pages/UserManagement";
 import VendorList from "./pages/VendorList";
 import VendorBudget from "./pages/VendorBudget";
@@ -44,7 +43,6 @@ const App = () => (
           <Route path="/users" element={<UserManagement />} />
           <Route path="/vendors" element={<VendorList />} />
           <Route path="/vendors/budget" element={<VendorBudget />} />
-          <Route path="/verify-otp" element={<VerifyOtp />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

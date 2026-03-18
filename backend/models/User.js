@@ -24,19 +24,7 @@ const userSchema = new mongoose.Schema(
             minlength: [6, 'Password must be at least 6 characters'],
             select: false, // never returned in queries by default
         },
-        // ── OTP fields ────────────────────────────────────────────────
-        otpCode: {
-            type: String,
-            select: false,
-        },
-        otpExpires: {
-            type: Date,
-            select: false,
-        },
-        isVerified: {
-            type: Boolean,
-            default: false,
-        },
+
     },
     { timestamps: true }
 );
@@ -61,8 +49,6 @@ userSchema.set('toJSON', {
         delete ret._id;
         delete ret.__v;
         delete ret.password;
-        delete ret.otpCode;
-        delete ret.otpExpires;
     },
 });
 

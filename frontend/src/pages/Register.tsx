@@ -31,12 +31,18 @@ const Register = () => {
     setLoading(true);
     try {
       const res = await api.post("/auth/register", { name, email, password });
-      // Backend now sends OTP — redirect to the verification page
+      
+      // Save token directly
+      if (res.token) {
+        localStorage.setItem("renewx_token", res.token);
+        localStorage.setItem("renewx_user", JSON.stringify(res.user));
+      }
+      
       toast({
-        title: "Check your inbox!",
-        description: res.message || "A 6-digit verification code has been sent to your email.",
+        title: "Registration successful!",
+        description: "Welcome to RenewX.",
       });
-      navigate("/verify-otp", { state: { email } });
+      navigate("/dashboard");
     } catch (err: any) {
       toast({
         title: "Registration Failed",
