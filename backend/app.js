@@ -17,7 +17,7 @@ const app = express();
 const allowedOrigins =
     (
         process.env.ALLOWED_ORIGINS ||
-        'http://localhost:8080,http://localhost:8081,http://localhost:8082,http://localhost:5173'
+        'http://localhost:8080,http://localhost:8081,http://localhost:8082,http://localhost:5173,https://jade-wisp-ce2f09.netlify.app'
     )
         .split(',')
         .map((o) => o.trim());
