@@ -33,7 +33,7 @@ const UserManagement = () => {
     const userMap: Record<string, BillingItem[]> = {};
 
     users.forEach(user => {
-        userMap[user.email] = items.filter(item =>
+        userMap[user.name] = items.filter(item =>
             item.assignedUsers?.includes(user.email)
         );
     });
@@ -43,12 +43,12 @@ const UserManagement = () => {
 
     const filteredUsers = users.filter(user => {
         // Only show other users
-        if (currentUser && user.email === currentUser.email) return false;
+        if (currentUser && user.name === currentUser.name) return false;
 
         const matchesUser = user.name.toLowerCase().includes(search.toLowerCase()) ||
             user.email.toLowerCase().includes(search.toLowerCase());
 
-        const matchesItems = (userMap[user.email] || []).some(item =>
+        const matchesItems = (userMap[user.name] || []).some(item =>
             item.name.toLowerCase().includes(search.toLowerCase())
         );
 
@@ -117,15 +117,15 @@ const UserManagement = () => {
                                             </p>
                                             <p className="text-xs text-muted-foreground flex items-center gap-1.5 font-bold bg-secondary/50 px-2 py-0.5 rounded-full w-fit">
                                                 <PackageOpen className="h-3 w-3" />
-                                                {(userMap[user.email] || []).length} Assets
+                                                {(userMap[user.name] || []).length} Assets
                                             </p>
                                         </div>
                                     </div>
                                 </div>
 
                                 <div className="space-y-2">
-                                    {(userMap[user.email] || []).length > 0 ? (
-                                        (userMap[user.email] || []).map((item) => (
+                                    {(userMap[user.name] || []).length > 0 ? (
+                                        (userMap[user.name] || []).map((item) => (
                                             <div key={item.id} className="flex items-center justify-between p-3 rounded-xl bg-secondary/30 border border-border/40 hover:bg-secondary/50 hover:border-border transition-all group/item">
                                                 <div className="flex items-center gap-3">
                                                     <div className="p-1.5 rounded-lg bg-background border border-border shadow-sm group-hover/item:scale-105 transition-transform">

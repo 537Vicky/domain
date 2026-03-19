@@ -7,18 +7,7 @@ module.exports = async (req, res) => {
         await connectDB();
         return app(req, res);
     } catch (error) {
-        // Force CORS headers on crash conditions so the browser allows rendering errors.
-        res.setHeader('Access-Control-Allow-Origin', req.headers.origin || '*');
-        res.setHeader('Access-Control-Allow-Credentials', 'true');
-        res.setHeader('Access-Control-Allow-Methods', 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS');
-        res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
-
-        // Browsers FAIL CORS check if Preflight (OPTIONS) responds with 500 error. 
-        // We must return 200 OK for OPTIONS preflights to bypass the mask.
-        if (req.method === 'OPTIONS') {
-            return res.status(200).end();
-        }
-
+        // If DB fails to connect (e.g. wrong IP whitelist or bad password), this will gracefully return a 500 error instead of completely tearing down the Lambda container and giving a FUNCTION_INVOCATION_FAILED error.
         console.error("Database connection failed during request:", error);
         res.status(500).json({ error: true, message: "Database connection failed", details: error.message });
     }

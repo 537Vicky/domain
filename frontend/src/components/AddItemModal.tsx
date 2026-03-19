@@ -175,10 +175,10 @@ const AddItemModal = ({ open, onClose, onAdd, editItem, onUpdate }: AddItemModal
             </div>
             {assignedUsers.length > 0 && (
               <div className="flex flex-wrap gap-2 mt-2">
-                {assignedUsers.map((userName) => (
-                  <div key={userName} className="flex items-center gap-1 bg-primary/10 text-primary px-3 py-1.5 rounded-xl text-xs font-bold border border-primary/20 animate-in zoom-in-95">
-                    {userName}
-                    <button type="button" onClick={() => removeUser(userName)} className="ml-1 hover:text-destructive transition-colors">
+                {assignedUsers.map((userEmail) => (
+                  <div key={userEmail} className="flex items-center gap-1 bg-primary/10 text-primary px-3 py-1.5 rounded-xl text-xs font-bold border border-primary/20 animate-in zoom-in-95">
+                    {availableUsers.find(u => u.email === userEmail)?.name || userEmail}
+                    <button type="button" onClick={() => removeUser(userEmail)} className="ml-1 hover:text-destructive transition-colors">
                       <X className="h-3.5 w-3.5" />
                     </button>
                   </div>
