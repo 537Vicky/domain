@@ -36,7 +36,7 @@ router.get('/', async (req, res, next) => {
         const items = await Item.find({
             $or: [
                 { user: req.user._id },
-                { assignedUsers: req.user.name }
+                { assignedUsers: req.user.email } // Use Unique Email instead of Name
             ]
         }).sort({ expiryDate: 1 });
         res.status(200).json(items.map((i) => {
@@ -61,7 +61,7 @@ router.get('/expiring-soon', async (req, res, next) => {
         const items = await Item.find({
             $or: [
                 { user: req.user._id },
-                { assignedUsers: req.user.name }
+                { assignedUsers: req.user.email }
             ],
             expiryDate: { $lte: in30Days },
         }).sort({ expiryDate: 1 });
