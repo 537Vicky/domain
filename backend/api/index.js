@@ -7,7 +7,12 @@ module.exports = async (req, res) => {
         await connectDB();
         return app(req, res);
     } catch (error) {
-        // If DB fails to connect (e.g. wrong IP whitelist or bad password), this will gracefully return a 500 error instead of completely tearing down the Lambda container and giving a FUNCTION_INVOCATION_FAILED error.
+        // Force CORS headers in the crash condition so that the browser can render the actual 500 error payload instead of masking it with a CORS block.
+        res.setHeader('Access-Control-Allow-Origin', req.headers.origin || '*');
+        res.setHeader('Access-Control-Allow-Credentials', 'true');
+        res.setHeader('Access-Control-Allow-Methods', 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS');
+        res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
+
         console.error("Database connection failed during request:", error);
         res.status(500).json({ error: true, message: "Database connection failed", details: error.message });
     }
