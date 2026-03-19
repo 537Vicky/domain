@@ -31,7 +31,7 @@ const authLimiter = rateLimit({
 const allowedOrigins =
     (
         process.env.ALLOWED_ORIGINS ||
-        'http://localhost:8080,http://localhost:8081,http://localhost:8082,http://localhost:5173,https://jade-wisp-ce2f09.netlify.app'
+        'http://localhost:8080,http://localhost:8081,http://localhost:8082,http://localhost:5173'
     )
         .split(',')
         .map((o) => o.trim());
@@ -40,7 +40,7 @@ app.use(
     cors({
         origin: (origin, callback) => {
             // Allow Postman / curl (no origin) + whitelisted origins + Netlify preview deployments
-            if (!origin || allowedOrigins.includes(origin) || origin.endsWith('jade-wisp-ce2f09.netlify.app')) {
+            if (!origin || allowedOrigins.includes(origin) || origin === 'https://jade-wisp-ce2f09.netlify.app' || origin.endsWith('.jade-wisp-ce2f09.netlify.app')) {
                 callback(null, true);
             } else {
                 callback(new Error(`CORS blocked for origin: ${origin}`));
