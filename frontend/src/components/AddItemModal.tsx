@@ -29,7 +29,6 @@ const AddItemModal = ({ open, onClose, onAdd, editItem, onUpdate }: AddItemModal
 
   useEffect(() => {
     if (open) {
-      api.get("/auth/users").then(setAvailableUsers).catch(console.error);
       if (editItem) {
         setName(editItem.name || "");
         setType(editItem.type || "license");
@@ -148,28 +147,37 @@ const AddItemModal = ({ open, onClose, onAdd, editItem, onUpdate }: AddItemModal
           <div className="space-y-3">
             <Label className="flex items-center gap-2">
               <Users className="h-4 w-4" />
-              Assigned Active Users
+              Assign User (By Email)
             </Label>
             <div className="flex gap-2">
-              <Select value={selectedUserToAdd} onValueChange={setSelectedUserToAdd}>
-                <SelectTrigger className="flex-1">
-                  <SelectValue placeholder="Select user to assign..." />
-                </SelectTrigger>
-                <SelectContent>
-                  {availableUsers
-                    .filter(u => u.email !== JSON.parse(localStorage.getItem("renewx_user") || "{}").email)
-                    .filter(u => !assignedUsers.includes(u.email))
-                    .map(u => (
-                      <SelectItem key={u.id} value={u.email}>
-                        {u.name} ({u.email})
-                      </SelectItem>
-                    ))}
-                  {availableUsers.filter(u => u.email !== JSON.parse(localStorage.getItem("renewx_user") || "{}").email).filter(u => !assignedUsers.includes(u.email)).length === 0 && (
-                    <div className="p-2 text-xs text-muted-foreground text-center">No more real users to assign</div>
-                  )}
-                </SelectContent>
-              </Select>
-              <Button type="button" variant="secondary" onClick={addUser} className="shrink-0" disabled={!selectedUserToAdd}>
+              <Input 
+                placeholder="Lookup user by email..." 
+                value={selectedUserToAdd}
+                onChange={(e) => setSelectedUserToAdd(e.target.value)}
+                className="flex-1"
+              />
+              <Button 
+                type="button" 
+                variant="secondary" 
+                onClick={async () => {
+                  if (!selectedUserToAdd) return;
+                  try {
+                    const response = await api.get(`/auth/users?email=${selectedUserToAdd}`);
+                    if (response && response[0]) {
+                       const found = response[0];
+                       if (!assignedUsers.includes(found.email)) {
+                         setAvailableUsers(prev => [...prev.filter(u => u.id !== found.id), found]);
+                         setAssignedUsers([...assignedUsers, found.email]);
+                       }
+                       setSelectedUserToAdd("");
+                    }
+                  } catch (e: any) {
+                    // Fail gracefully
+                  }
+                }} 
+                className="shrink-0" 
+                disabled={!selectedUserToAdd}
+              >
                 <Plus className="h-4 w-4" />
               </Button>
             </div>

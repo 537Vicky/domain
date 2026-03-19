@@ -116,12 +116,32 @@ router.get('/me', protect, (req, res) => {
 
 /* ── GET /api/auth/users ──────────────────────────────────────────────
    Headers: Authorization: Bearer <token>
-   Returns: All registered users
+   Query: ?email=target@example.com
+   Returns: Object match or empty 404
 ────────────────────────────────────────────────────────────────────── */
 router.get('/users', protect, async (req, res, next) => {
     try {
-        const users = await User.find().select('name email');
-        res.status(200).json(users);
+        const { email } = req.query;
+
+        if (!email) {
+            return res.status(400).json({
+                error: true,
+                message: 'Email query parameter is required',
+                code: 'BAD_REQUEST',
+            });
+        }
+
+        const user = await User.findOne({ email: email.toLowerCase() }).select('name email');
+        if (!user) {
+            return res.status(404).json({
+                error: true,
+                message: 'User not found',
+                code: 'NOT_FOUND',
+            });
+        }
+
+        // Return in an array to maintain structure for existing frontend maps
+        res.status(200).json([user]);
     } catch (err) {
         next(err);
     }
