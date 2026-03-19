@@ -44,15 +44,18 @@ app.use(
     cors({
         origin: (origin, callback) => {
             // Allow Postman / curl (no origin) + whitelisted origins + Netlify preview deployments
-            if (
+            const isWhitelisted = 
                 !origin || 
                 allowedOrigins.includes(origin) || 
                 origin === 'https://jade-wisp-ce2f09.netlify.app' || 
-                origin.endsWith('.jade-wisp-ce2f09.netlify.app')
-            ) {
+                origin.endsWith('.jade-wisp-ce2f09.netlify.app') ||
+                origin.endsWith('--jade-wisp-ce2f09.netlify.app'); // For Netlify preview URLs
+
+            if (isWhitelisted) {
                 callback(null, true);
             } else {
-                callback(new Error(`CORS blocked for origin: ${origin}`));
+                // Return false instead of throwing error directly to let CORS handle blocking response correctly
+                callback(null, false);
             }
         },
         credentials: true,
