@@ -12,21 +12,8 @@ const rateLimit = require('express-rate-limit');
 
 const app = express();
 
-/* ── Rate Limiting ─────────────────────────────────────────────
-   To prevent brute-force attacks on auth endpoints.
-───────────────────────────────────────────────────────────────── */
-const authLimiter = rateLimit({
-    windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 15, // Limit each IP to 15 requests per windowMs
-    message: {
-        error: true,
-        message: 'Too many requests, please try again after 15 minutes',
-        code: 'TOO_MANY_REQUESTS',
-    },
-});
-
-app.use('/api/auth/login', authLimiter);
-app.use('/api/auth/register', authLimiter);
+// Required for rate-limiting to read individual user IPs correctly when hosted on Vercel/proxies.
+app.set('trust proxy', 1);
 
 /* ── CORS ───────────────────────────────────────────────────────
    Read allowed origins from .env so both Vite dev server and
@@ -54,13 +41,28 @@ app.use(
             if (isWhitelisted) {
                 callback(null, true);
             } else {
-                // Return false instead of throwing error directly to let CORS handle blocking response correctly
                 callback(null, false);
             }
         },
         credentials: true,
     })
 );
+
+/* ── Rate Limiting ─────────────────────────────────────────────
+   To prevent brute-force attacks on auth endpoints.
+───────────────────────────────────────────────────────────────── */
+const authLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 15, // Limit each IP to 15 requests per windowMs
+    message: {
+        error: true,
+        message: 'Too many requests, please try again after 15 minutes',
+        code: 'TOO_MANY_REQUESTS',
+    },
+});
+
+app.use('/api/auth/login', authLimiter);
+app.use('/api/auth/register', authLimiter);
 
 /* ── Body Parsing ───────────────────────────────────────────── */
 app.use(express.json());
