@@ -4,11 +4,25 @@ const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
 const errorHandler = require('./middleware/errorHandler');
+const rateLimit = require('express-rate-limit');
 const authRoutes = require('./routes/auth');
 const itemRoutes = require('./routes/items');
 const budgetRoutes = require('./routes/budget');
 
 const app = express();
+
+/* ── Rate Limiting ─────────────────────────────────────────── */
+const authLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 15, // limit each IP to 15 requests per windowMs
+    message: {
+        error: true,
+        message: 'Too many requests from this IP, please try again after 15 minutes',
+        code: 'TOO_MANY_REQUESTS'
+    },
+    standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+    legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+});
 
 /* ── CORS ───────────────────────────────────────────────────────
    Read allowed origins from .env so both Vite dev server and
@@ -55,7 +69,7 @@ app.get('/api/health', (_req, res) => {
 });
 
 /* ── API Routes ─────────────────────────────────────────────── */
-app.use('/api/auth', authRoutes);
+app.use('/api/auth', authLimiter, authRoutes);
 app.use('/api/items', itemRoutes);
 app.use('/api/budget', budgetRoutes);
 
