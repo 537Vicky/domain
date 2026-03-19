@@ -3,19 +3,12 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
-const rateLimit = require('express-rate-limit');
 const errorHandler = require('./middleware/errorHandler');
 const authRoutes = require('./routes/auth');
 const itemRoutes = require('./routes/items');
 const budgetRoutes = require('./routes/budget');
 
 const app = express();
-
-const authLimiter = rateLimit({
-    windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 15, // limit each IP to 15 requests per window
-    message: { error: true, message: 'Too many requests, please try again in 15 minutes.' }
-});
 
 /* ── CORS ───────────────────────────────────────────────────────
    Read allowed origins from .env so both Vite dev server and
@@ -33,12 +26,7 @@ app.use(
     cors({
         origin: (origin, callback) => {
             // Allow Postman / curl (no origin) + whitelisted origins + Netlify preview deployments
-            if (
-                !origin ||
-                allowedOrigins.includes(origin) ||
-                origin === 'https://jade-wisp-ce2f09.netlify.app' ||
-                origin.endsWith('.jade-wisp-ce2f09.netlify.app')
-            ) {
+            if (!origin || allowedOrigins.includes(origin) || origin.endsWith('jade-wisp-ce2f09.netlify.app')) {
                 callback(null, true);
             } else {
                 callback(new Error(`CORS blocked for origin: ${origin}`));
@@ -67,7 +55,7 @@ app.get('/api/health', (_req, res) => {
 });
 
 /* ── API Routes ─────────────────────────────────────────────── */
-app.use('/api/auth', authLimiter, authRoutes);
+app.use('/api/auth', authRoutes);
 app.use('/api/items', itemRoutes);
 app.use('/api/budget', budgetRoutes);
 

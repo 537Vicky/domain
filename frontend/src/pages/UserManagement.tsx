@@ -34,7 +34,7 @@ const UserManagement = () => {
 
     users.forEach(user => {
         userMap[user.name] = items.filter(item =>
-            item.assignedUsers?.includes(user.email)
+            item.assignedUsers?.includes(user.name)
         );
     });
 
