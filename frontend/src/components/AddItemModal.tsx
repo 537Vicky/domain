@@ -157,14 +157,14 @@ const AddItemModal = ({ open, onClose, onAdd, editItem, onUpdate }: AddItemModal
                 </SelectTrigger>
                 <SelectContent>
                   {availableUsers
-                    .filter(u => u.name !== JSON.parse(localStorage.getItem("renewx_user") || "{}").name)
-                    .filter(u => !assignedUsers.includes(u.name))
+                    .filter(u => u.email !== JSON.parse(localStorage.getItem("renewx_user") || "{}").email)
+                    .filter(u => !assignedUsers.includes(u.email))
                     .map(u => (
-                      <SelectItem key={u.id} value={u.name}>
+                      <SelectItem key={u.id} value={u.email}>
                         {u.name} ({u.email})
                       </SelectItem>
                     ))}
-                  {availableUsers.filter(u => u.name !== JSON.parse(localStorage.getItem("renewx_user") || "{}").name).filter(u => !assignedUsers.includes(u.name)).length === 0 && (
+                  {availableUsers.filter(u => u.email !== JSON.parse(localStorage.getItem("renewx_user") || "{}").email).filter(u => !assignedUsers.includes(u.email)).length === 0 && (
                     <div className="p-2 text-xs text-muted-foreground text-center">No more real users to assign</div>
                   )}
                 </SelectContent>

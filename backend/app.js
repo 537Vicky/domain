@@ -8,7 +8,25 @@ const authRoutes = require('./routes/auth');
 const itemRoutes = require('./routes/items');
 const budgetRoutes = require('./routes/budget');
 
+const rateLimit = require('express-rate-limit');
+
 const app = express();
+
+/* ── Rate Limiting ─────────────────────────────────────────────
+   To prevent brute-force attacks on auth endpoints.
+───────────────────────────────────────────────────────────────── */
+const authLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 15, // Limit each IP to 15 requests per windowMs
+    message: {
+        error: true,
+        message: 'Too many requests, please try again after 15 minutes',
+        code: 'TOO_MANY_REQUESTS',
+    },
+});
+
+app.use('/api/auth/login', authLimiter);
+app.use('/api/auth/register', authLimiter);
 
 /* ── CORS ───────────────────────────────────────────────────────
    Read allowed origins from .env so both Vite dev server and
@@ -26,7 +44,12 @@ app.use(
     cors({
         origin: (origin, callback) => {
             // Allow Postman / curl (no origin) + whitelisted origins + Netlify preview deployments
-            if (!origin || allowedOrigins.includes(origin) || origin.endsWith('jade-wisp-ce2f09.netlify.app')) {
+            if (
+                !origin || 
+                allowedOrigins.includes(origin) || 
+                origin === 'https://jade-wisp-ce2f09.netlify.app' || 
+                origin.endsWith('.jade-wisp-ce2f09.netlify.app')
+            ) {
                 callback(null, true);
             } else {
                 callback(new Error(`CORS blocked for origin: ${origin}`));
