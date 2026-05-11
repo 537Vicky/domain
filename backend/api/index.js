@@ -3,6 +3,11 @@ const connectDB = require('../config/db');
 
 // Wrap the Express app in a serverless function that awaits database connection
 module.exports = async (req, res) => {
+    // Respond to CORS preflight requests immediately
+    if (req.method === 'OPTIONS') {
+        return res.status(200).end();
+    }
+
     try {
         await connectDB();
         return app(req, res);
